@@ -172,7 +172,9 @@ def direct_link_generator(link):
         return hxfile(link)
     elif "1drv.ms" in domain:
         return onedrive(link)
-    elif "pixeldrain.com" in domain:
+    elif domain in {"pixeldrain.com", "pixeldrain.net"} or domain.endswith(
+        (".pixeldrain.com", ".pixeldrain.net")
+    ):
         return pixeldrain(link)
     elif "racaty" in domain:
         return racaty(link)
@@ -696,10 +698,9 @@ def pixeldrain(url):
     try:
         url = url.rstrip("/")
         code = url.split("/")[-1].split("?", 1)[0]
-        response = get("https://pd.cybar.xyz/", allow_redirects=True)
-        return response.url + code
+        return f"https://pixeldrain.com/api/file/{code}?download"
     except Exception as e:
-        raise DirectDownloadLinkException("ERROR: Direct link not found")
+        raise DirectDownloadLinkException(f"ERROR: {e.__class__.__name__}") from e
 
 
 def streamtape(url):
